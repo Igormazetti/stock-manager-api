@@ -68,6 +68,7 @@
     ],
     "complexity": ["error", 5],
     "import/no-extraneous-dependencies": ["off"],
+    "import/prefer-default-export": ["off"],
     "sonarjs/cognitive-complexity": ["error", 5],
     "sonarjs/no-one-iteration-loop": ["error"],
     "sonarjs/no-identical-expressions": ["error"],

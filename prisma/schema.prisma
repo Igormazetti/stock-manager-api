@@ -11,19 +11,19 @@ datasource db {
 }
 
 model Products {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   title       String   @db.VarChar(255)
   value       Float
   description String
   Company     Company  @relation(fields: [companyId], references: [id])
-  companyId   Int
+  companyId   String
   imgUrl      String?  @default("")
 }
 
 model Company {
-  id       Int        @id @default(autoincrement())
+  id       String     @id @default(uuid())
   name     String     @unique @db.VarChar(255)
   email    String     @unique
   password String     @db.VarChar(255)

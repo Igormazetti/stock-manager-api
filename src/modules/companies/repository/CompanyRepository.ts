@@ -35,10 +35,20 @@ export default class CompanyRepository {
     return company;
   }
 
-  public async findById(id: number): Promise<Company | null> {
+  public async findById(id: string): Promise<Company | null> {
     const company = await this.db.findUnique({
       where: {
         id,
+      },
+    });
+
+    return company;
+  }
+
+  public async findByEmail(email: string): Promise<Company | null> {
+    const company = await this.db.findUnique({
+      where: {
+        email,
       },
     });
 
