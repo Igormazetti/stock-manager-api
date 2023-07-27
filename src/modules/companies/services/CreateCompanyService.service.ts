@@ -1,5 +1,5 @@
-import Encrypt from 'utils/hash';
-import { CustomError } from 'common/error/CustomError';
+import Encrypt from '../../../utils/hash';
+import { CustomError } from '../../../common/error/CustomError';
 import CompanyRepository from '../repository/CompanyRepository';
 
 export default class CreateCompanyService {

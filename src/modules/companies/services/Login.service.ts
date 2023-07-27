@@ -1,4 +1,4 @@
-import { CustomError } from 'common/error/CustomError';
+import { CustomError } from '../../../common/error/CustomError';
 import CompanyRepository from '../repository/CompanyRepository';
 import Encrypt from '../../../utils/hash';
 import Token from '../../../utils/jwt';

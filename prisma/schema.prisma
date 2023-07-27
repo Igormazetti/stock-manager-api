@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Products {
+model Product {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -23,9 +23,9 @@ model Products {
 }
 
 model Company {
-  id       String     @id @default(uuid())
-  name     String     @unique @db.VarChar(255)
-  email    String     @unique
-  password String     @db.VarChar(255)
-  product  Products[]
+  id       String    @id @default(uuid())
+  name     String    @unique @db.VarChar(255)
+  email    String    @unique
+  password String    @db.VarChar(255)
+  product  Product[]
 }
