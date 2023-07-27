@@ -5,7 +5,11 @@
     "strict": true,
     "lib": ["esnext"],
     "esModuleInterop": true,
-    "typeRoots": ["./node_modules/@types", "./enviroment.d.ts"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./enviroment.d.ts",
+      "./src/@types/*.d.ts"
+    ],
     "baseUrl": "./src",
     "paths": {
       "@/*": ["src/*"]
