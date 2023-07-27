@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 interface ITokenPayload {
   iat: number;
   exp: number;
-  sub: string;
+  data: string;
 }
 
 const secret = process.env.JWT_SECRET || 'secret';
@@ -20,8 +20,8 @@ export default class Token {
   validateToken = (token: string) => {
     try {
       const decoded = jwt.verify(token, secret);
-      const { sub } = decoded as ITokenPayload;
-      return sub;
+      const { data } = decoded as ITokenPayload;
+      return data;
     } catch (_err) {
       return undefined;
     }

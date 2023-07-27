@@ -18,11 +18,15 @@ export const authMiddleware = (
   const tokenInstance = new Token();
   const decoded = tokenInstance.validateToken(token);
 
+  console.log(decoded);
+
   if (decoded) {
     req.company = {
       id: decoded,
     };
   }
+
+  console.log(req.company);
 
   next();
 };

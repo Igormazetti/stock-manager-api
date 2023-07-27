@@ -4,8 +4,9 @@ import CreateProductsService from '../services/CreateProduct.service';
 
 export default class ProductController {
   public async create(request: Request, response: Response) {
-    const { title, value, description, imgUrl, companyId } = request.body;
+    const { title, value, description, imgUrl } = request.body;
     const creteProductService = container.resolve(CreateProductsService);
+    const companyId = request.company.id;
 
     const product = await creteProductService.execute(
       title,
