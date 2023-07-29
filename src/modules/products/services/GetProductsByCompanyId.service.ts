@@ -2,7 +2,7 @@ import { CustomError } from '../../../common/error/CustomError';
 import ProductRepository from '../repository/ProductRepository';
 import CompanyRepository from '../../companies/repository/CompanyRepository';
 
-export default class getProductsByCompanyIdService {
+export default class GetProductsByCompanyIdService {
   private productRepository: ProductRepository;
   private companyRepository: CompanyRepository;
 
