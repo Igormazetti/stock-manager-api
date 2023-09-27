@@ -26,6 +26,10 @@ export default class CreateCompanyService {
       password: hashPassword,
     });
 
-    return company;
+    return {
+      id: company.id,
+      name: company.name,
+      email: company.email,
+    };
   }
 }
