@@ -1,4 +1,3 @@
-import { CustomError } from '../../../common/error/CustomError';
 import CompanyRepository from '../repository/CompanyRepository';
 import Encrypt from '../../../utils/hash';
 import Token from '../../../utils/jwt';
@@ -17,13 +16,19 @@ export default class LoginService {
     const company = await this.companyRepository.findByEmail(email);
 
     if (!company) {
-      throw new CustomError('Usuário não encontrado!', 404);
+      return {
+        status: 404,
+        errorMessage: 'Usuário não encontrado!',
+      };
     }
 
     const checkHash = this.encrypt.checkPassword(password, company.password);
 
     if (!checkHash) {
-      throw new CustomError('Senha inválida!', 401);
+      return {
+        status: 401,
+        errorMessage: 'Senha inválida!',
+      };
     }
 
     const tokenInstance = new Token();
@@ -31,7 +36,13 @@ export default class LoginService {
     const token = tokenInstance.createToken(String(company.id));
 
     return {
-      company,
+      status: 200,
+      company: {
+        id: company.id,
+        name: company.name,
+        email: company.email,
+        valid: company.valid,
+      },
       token,
     };
   }

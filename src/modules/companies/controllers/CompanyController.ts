@@ -18,8 +18,8 @@ export default class CompanyController {
 
     const loginService = container.resolve(LoginService);
 
-    const user = await loginService.execute(email, password);
+    const session = await loginService.execute(email, password);
 
-    return response.status(200).json(user);
+    return response.status(session.status).json(session);
   }
 }

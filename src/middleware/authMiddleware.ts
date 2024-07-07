@@ -24,7 +24,5 @@ export const authMiddleware = (
     };
   }
 
-  console.log(req.company);
-
   next();
 };

@@ -12,20 +12,48 @@ datasource db {
 
 model Product {
   id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
   title       String   @db.VarChar(255)
   value       Float
   description String
-  Company     Company  @relation(fields: [companyId], references: [id])
+  quantity    Int
   companyId   String
-  imgUrl      String?  @default("")
+  imgUrl      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Company Company           @relation(fields: [companyId], references: [id])
+  sales   Sale[]
+  Sales   ProductsOnSales[]
 }
 
 model Company {
-  id       String    @id @default(uuid())
-  name     String    @unique @db.VarChar(255)
-  email    String    @unique
-  password String    @db.VarChar(255)
-  product  Product[]
+  id       String  @id @default(uuid())
+  name     String  @unique @db.VarChar(255)
+  email    String  @unique
+  valid    Boolean @default(true)
+  password String  @db.VarChar(255)
+
+  product Product[]
+  sales   Sale[]
+}
+
+model Sale {
+  id         String    @id @default(uuid())
+  client     String
+  company_id String
+  products   Product[]
+
+  Company  Company           @relation(fields: [company_id], references: [id])
+  Products ProductsOnSales[]
+}
+
+model ProductsOnSales {
+  id         String @id @unique @default(uuid())
+  product_id String
+  sale_id    String
+
+  Product Product @relation(fields: [product_id], references: [id])
+  Sale    Sale    @relation(fields: [sale_id], references: [id])
+
+  @@map("productsOnSales")
 }

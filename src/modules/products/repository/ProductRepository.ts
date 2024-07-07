@@ -5,8 +5,9 @@ interface ProductPayload {
   title: string;
   value: number;
   description: string;
-  imgUrl: string;
+  imgUrl?: string;
   companyId: string;
+  quantity: number;
 }
 
 interface UpdateProductPayload {
@@ -14,6 +15,7 @@ interface UpdateProductPayload {
   value?: number;
   description?: string;
   imgUrl?: string;
+  quantity?: number;
 }
 
 export default class ProductRepository {
@@ -29,11 +31,11 @@ export default class ProductRepository {
     description,
     imgUrl,
     companyId,
-  }: ProductPayload): Promise<Product> {
-    const product = await this.db.create({
-      data: { title, value, description, imgUrl, companyId },
+    quantity,
+  }: ProductPayload): Promise<void> {
+    await this.db.create({
+      data: { title, value, description, imgUrl, companyId, quantity },
     });
-    return product;
   }
 
   public async getProductsByCompanyId(
@@ -58,8 +60,19 @@ export default class ProductRepository {
     return product;
   }
 
+  public async getProductByName(companyId: string, title: string) {
+    const product = await this.db.findFirst({
+      where: {
+        title,
+        companyId,
+      },
+    });
+
+    return product;
+  }
+
   public async updateProduct(id: string, data: UpdateProductPayload) {
-    const product = await this.db.update({
+    await this.db.update({
       where: { id },
       data,
     });

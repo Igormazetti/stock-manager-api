@@ -42,6 +42,7 @@
     "jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.19",
     "reflect-metadata": "^0.1.13",
-    "tsyringe": "^4.7.0"
+    "tsyringe": "^4.7.0",
+    "yup": "^1.4.0"
   }
 }

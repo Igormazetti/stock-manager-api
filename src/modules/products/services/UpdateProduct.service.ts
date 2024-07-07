@@ -2,15 +2,15 @@ import { CustomError } from '../../../common/error/CustomError';
 import ProductRepository from '../repository/ProductRepository';
 
 interface IRequest {
-  title: string;
-  value: number;
-  description: string;
-  companyId: string;
+  productId: string;
+  title?: string;
+  value?: number;
+  description?: string;
   imgUrl?: string;
-  quantity: number;
+  quantity?: number;
 }
 
-export default class CreateProductsService {
+export default class UpdateProductsService {
   private productRepository: ProductRepository;
 
   constructor() {
@@ -18,28 +18,24 @@ export default class CreateProductsService {
   }
 
   public async execute({
+    productId,
     title,
     value,
     description,
     imgUrl,
-    companyId,
     quantity,
   }: IRequest) {
-    const product = await this.productRepository.getProductByName(
-      companyId,
-      title,
-    );
+    const product = await this.productRepository.getProductById(productId);
 
-    if (product) {
-      throw new CustomError('Já existe produto cadastrado com este nome', 422);
+    if (!product) {
+      throw new CustomError('Produto não encontrado', 404);
     }
 
-    await this.productRepository.createProduct({
+    await this.productRepository.updateProduct(productId, {
       title,
       value,
       description,
       imgUrl,
-      companyId,
       quantity,
     });
   }
