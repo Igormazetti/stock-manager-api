@@ -16,13 +16,13 @@ export default class SalesController {
     const creteSaleService = container.resolve(CreateSaleService);
     const companyId = request.company.id;
 
-    await creteSaleService.execute({
+    const newSale = await creteSaleService.execute({
       client,
       companyId,
       products,
     });
 
-    return response.status(200).json();
+    return response.status(newSale.status).json(newSale);
   }
 
   public async getAll(request: Request, response: Response) {
@@ -31,6 +31,6 @@ export default class SalesController {
 
     const sales = await getSaleService.execute(companyId);
 
-    return response.status(200).json(sales);
+    return response.status(sales.status).json(sales);
   }
 }

@@ -1,4 +1,3 @@
-import { CustomError } from '../../../common/error/CustomError';
 import ProductRepository from '../repository/ProductRepository';
 
 interface IRequest {
@@ -28,7 +27,10 @@ export default class UpdateProductsService {
     const product = await this.productRepository.getProductById(productId);
 
     if (!product) {
-      throw new CustomError('Produto não encontrado', 404);
+      return {
+        status: 404,
+        errorMessage: 'Produto não encontrado',
+      };
     }
 
     await this.productRepository.updateProduct(productId, {
@@ -38,5 +40,9 @@ export default class UpdateProductsService {
       imgUrl,
       quantity,
     });
+
+    return {
+      status: 200,
+    };
   }
 }

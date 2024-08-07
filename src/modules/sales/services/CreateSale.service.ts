@@ -1,4 +1,3 @@
-import { CustomError } from '../../../common/error/CustomError';
 import SalesRepository from '../repository/SalesRepository';
 
 interface IRequest {
@@ -21,8 +20,15 @@ export default class CreateSaleService {
         companyId,
         products,
       });
+
+      return {
+        status: 200,
+      };
     } catch (err) {
-      throw new CustomError('Falha ao efetuar venda', 400);
+      return {
+        status: 400,
+        errorMessage: 'Falha ao efetuar venda',
+      };
     }
   }
 }

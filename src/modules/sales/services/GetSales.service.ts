@@ -1,5 +1,4 @@
 import CompanyRepository from 'modules/companies/repository/CompanyRepository';
-import { CustomError } from '../../../common/error/CustomError';
 import SalesRepository from '../repository/SalesRepository';
 
 export default class GetSaleService {
@@ -16,11 +15,17 @@ export default class GetSaleService {
     const existingCompany = await this.companyRepository.findById(companyId);
 
     if (!existingCompany) {
-      throw new CustomError('Empresa não encontrada', 404);
+      return {
+        status: 404,
+        errorMessage: 'Empresa não encontrada',
+      };
     }
 
     const sales = await this.salesRepository.getSales(companyId);
 
-    return sales;
+    return {
+      status: 200,
+      sales,
+    };
   }
 }

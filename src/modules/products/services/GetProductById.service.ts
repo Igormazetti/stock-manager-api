@@ -1,4 +1,3 @@
-import { CustomError } from '../../../common/error/CustomError';
 import ProductRepository from '../repository/ProductRepository';
 
 export default class GetProductsByIdService {
@@ -12,9 +11,15 @@ export default class GetProductsByIdService {
     const product = await this.productRepository.getProductById(productId);
 
     if (!product) {
-      throw new CustomError('Produto não encontrado', 404);
+      return {
+        status: 404,
+        errorMessage: 'Produto não encontrado',
+      };
     }
 
-    return product;
+    return {
+      status: 200,
+      product,
+    };
   }
 }

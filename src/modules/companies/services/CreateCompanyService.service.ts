@@ -1,5 +1,4 @@
 import Encrypt from '../../../utils/hash';
-import { CustomError } from '../../../common/error/CustomError';
 import CompanyRepository from '../repository/CompanyRepository';
 
 export default class CreateCompanyService {
@@ -17,7 +16,10 @@ export default class CreateCompanyService {
     const existingCompany = await this.companyRepository.findByEmail(email);
 
     if (existingCompany) {
-      throw new CustomError('E-mail já cadastrado!', 422);
+      return {
+        status: 422,
+        errorMessage: 'E-mail já cadastrado!',
+      };
     }
 
     const company = await this.companyRepository.createCompany({
@@ -28,6 +30,7 @@ export default class CreateCompanyService {
 
     return {
       id: company.id,
+      status: 200,
       name: company.name,
       email: company.email,
     };

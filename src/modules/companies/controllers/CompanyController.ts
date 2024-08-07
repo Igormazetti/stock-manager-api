@@ -10,7 +10,7 @@ export default class CompanyController {
 
     const company = await creteCompanyService.execute(name, email, password);
 
-    return response.status(200).json(company);
+    return response.status(company.status).json(company);
   }
 
   public async login(request: Request, response: Response) {

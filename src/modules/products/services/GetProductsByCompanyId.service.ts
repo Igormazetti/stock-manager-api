@@ -1,4 +1,3 @@
-import { CustomError } from '../../../common/error/CustomError';
 import ProductRepository from '../repository/ProductRepository';
 import CompanyRepository from '../../companies/repository/CompanyRepository';
 
@@ -11,19 +10,28 @@ export default class GetProductsByCompanyIdService {
     this.companyRepository = new CompanyRepository();
   }
 
-  public async execute(companyId: string, skip: number, take: number) {
+  public async execute(companyId: string, skip: number) {
     const existingCompany = await this.companyRepository.findById(companyId);
 
     if (!existingCompany) {
-      throw new CustomError('Empresa não encontrada!', 404);
+      return {
+        status: 404,
+        errorMessage: 'Empresa não encontrada!',
+      };
     }
 
     const products = await this.productRepository.getProductsByCompanyId(
       companyId,
       skip,
-      take,
+      8,
     );
 
-    return products;
+    const pages = products.length / 8;
+
+    return {
+      status: 200,
+      products,
+      pages: pages < 1 ? 1 : pages,
+    };
   }
 }

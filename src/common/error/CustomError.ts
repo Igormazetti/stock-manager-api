@@ -1,9 +1,10 @@
 export class CustomError extends Error {
-  status: number;
+  public statusCode: number;
 
-  constructor(message: string, status: number) {
+  constructor(message: string, statusCode: number) {
     super(message);
-    this.status = status;
-    Error.captureStackTrace(this, CustomError);
+    this.statusCode = statusCode;
+
+    Error.captureStackTrace(this, this.constructor);
   }
 }

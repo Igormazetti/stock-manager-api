@@ -1,4 +1,3 @@
-import { CustomError } from '../../../common/error/CustomError';
 import ProductRepository from '../repository/ProductRepository';
 
 interface IRequest {
@@ -31,7 +30,10 @@ export default class CreateProductsService {
     );
 
     if (product) {
-      throw new CustomError('Já existe produto cadastrado com este nome', 422);
+      return {
+        status: 422,
+        errorMessage: 'Já existe produto cadastrado com este nome',
+      };
     }
 
     await this.productRepository.createProduct({
@@ -42,5 +44,9 @@ export default class CreateProductsService {
       companyId,
       quantity,
     });
+
+    return {
+      status: 200,
+    };
   }
 }

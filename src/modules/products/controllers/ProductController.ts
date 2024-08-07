@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { object, string, number } from 'yup';
@@ -27,11 +28,12 @@ const UpdateProductSchema = object({
 export default class ProductController {
   public async create(request: Request, response: Response) {
     // eslint-disable-next-line max-len
-    const { title, value, description, imgUrl, quantity } = await CreateProductSchema.validate(request.body);
+    const { title, value, description, imgUrl, quantity } =
+      await CreateProductSchema.validate(request.body);
     const creteProductService = container.resolve(CreateProductsService);
     const companyId = request.company.id;
 
-    await creteProductService.execute({
+    const product = await creteProductService.execute({
       title,
       value,
       description,
@@ -40,11 +42,11 @@ export default class ProductController {
       quantity,
     });
 
-    return response.status(200).json();
+    return response.status(product.status).json(product);
   }
 
   public async getProductByCompanyId(request: Request, response: Response) {
-    const { skip, take } = request.query;
+    const { skip } = request.query;
     const companyId = request.company.id;
 
     const getProductsByCompanyIdService = container.resolve(
@@ -53,20 +55,19 @@ export default class ProductController {
     const products = await getProductsByCompanyIdService.execute(
       companyId,
       Number(skip),
-      Number(take),
     );
 
-    return response.status(200).json(products);
+    return response.status(products.status).json(products);
   }
 
   public async update(request: Request, response: Response) {
     const { id } = request.params;
-    
-    // eslint-disable-next-line max-len
-    const { title, value, description, imgUrl, quantity } = await UpdateProductSchema.validate(request.body);
+
+    const { title, value, description, imgUrl, quantity } =
+      await UpdateProductSchema.validate(request.body);
     const updateProductService = container.resolve(UpdateProductsService);
 
-    await updateProductService.execute({
+    const update = await updateProductService.execute({
       productId: id,
       title,
       value,
@@ -75,6 +76,6 @@ export default class ProductController {
       quantity,
     });
 
-    return response.status(200).json();
+    return response.status(update.status).json(update);
   }
 }
