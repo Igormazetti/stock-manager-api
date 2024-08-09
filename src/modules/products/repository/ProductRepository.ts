@@ -42,14 +42,18 @@ export default class ProductRepository {
     companyId: string,
     skip: number,
     take: number,
-  ): Promise<Product[]> {
+  ): Promise<{ products: Product[]; totalCount: number }> {
     const products = await this.db.findMany({
       skip,
       take,
       where: { companyId },
     });
 
-    return products;
+    const totalCount = await this.db.count({
+      where: { companyId },
+    });
+
+    return { products, totalCount };
   }
 
   public async getProductById(id: string) {
@@ -72,6 +76,7 @@ export default class ProductRepository {
   }
 
   public async updateProduct(id: string, data: UpdateProductPayload) {
+    console.log(id);
     await this.db.update({
       where: { id },
       data,

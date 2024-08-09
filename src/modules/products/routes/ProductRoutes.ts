@@ -7,6 +7,6 @@ const productController = new ProductController();
 
 productRouter.get('/', authMiddleware, productController.getProductByCompanyId);
 productRouter.post('/create', authMiddleware, productController.create);
-productRouter.patch('/update', authMiddleware, productController.update);
+productRouter.patch('/update/:id', authMiddleware, productController.update);
 
 export default productRouter;

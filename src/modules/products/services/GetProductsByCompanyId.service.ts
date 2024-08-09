@@ -26,12 +26,12 @@ export default class GetProductsByCompanyIdService {
       8,
     );
 
-    const pages = products.length / 8;
+    const pages = Math.ceil(products.totalCount / 8);
 
     return {
       status: 200,
-      products,
-      pages: pages < 1 ? 1 : pages,
+      products: products.products,
+      pages,
     };
   }
 }
