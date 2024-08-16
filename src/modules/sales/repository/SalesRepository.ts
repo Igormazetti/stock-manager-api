@@ -30,11 +30,13 @@ export default class SalesRepository {
     client,
     companyId,
     products,
+    employeeId,
   }: SalesPayload): Promise<void> {
     await this.db.create({
       data: {
         client,
         company_id: companyId,
+        employee_id: employeeId,
         Products: {
           createMany: {
             data: products.map((product) => ({

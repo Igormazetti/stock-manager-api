@@ -38,12 +38,14 @@ model Company {
 }
 
 model Sale {
-  id         String    @id @default(uuid())
-  client     String
-  company_id String
-  products   Product[]
+  id          String    @id @default(uuid())
+  client      String
+  company_id  String
+  employee_id String
+  products    Product[]
 
   Company  Company           @relation(fields: [company_id], references: [id])
+  Employee Employee?         @relation(fields: [employee_id], references: [id])
   Products ProductsOnSales[]
 }
 
@@ -57,4 +59,19 @@ model ProductsOnSales {
   Sale    Sale    @relation(fields: [sale_id], references: [id])
 
   @@map("productsOnSales")
+}
+
+model Employee {
+  id     String  @id @default(uuid())
+  name   String
+  active Boolean
+  sales  Sale[]
+}
+
+model Client {
+  id      String  @id @default(uuid())
+  name    String
+  cnpj    String?
+  cpf     String?
+  address String
 }

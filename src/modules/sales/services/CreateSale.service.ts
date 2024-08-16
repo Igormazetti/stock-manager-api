@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import ProductRepository from 'modules/products/repository/ProductRepository';
 import SalesRepository from '../repository/SalesRepository';
 import { SalesPayload } from '../types';
@@ -11,7 +12,12 @@ export default class CreateSaleService {
     this.productsRepository = new ProductRepository();
   }
 
-  public async execute({ client, companyId, products }: SalesPayload) {
+  public async execute({
+    client,
+    companyId,
+    products,
+    employeeId,
+  }: SalesPayload) {
     try {
       await Promise.all(
         products.map(async (product) => {
@@ -43,6 +49,7 @@ export default class CreateSaleService {
         client,
         companyId,
         products,
+        employeeId,
       });
 
       return {
