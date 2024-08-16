@@ -1,11 +1,6 @@
 import { Sale } from '@prisma/client';
 import { prisma } from '../../../database/prismaClient';
-
-interface SalesPayload {
-  client: string;
-  companyId: string;
-  products: string[];
-}
+import { SalesPayload } from '../types';
 
 export default class SalesRepository {
   private db: typeof prisma.sale;
@@ -43,7 +38,8 @@ export default class SalesRepository {
         Products: {
           createMany: {
             data: products.map((product) => ({
-              product_id: product,
+              product_id: product.id,
+              quantity_sold: product.quantity,
             })),
           },
         },

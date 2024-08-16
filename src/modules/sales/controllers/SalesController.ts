@@ -1,12 +1,17 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { object, string, array } from 'yup';
+import { object, string, array, number } from 'yup';
 import CreateSaleService from '../services/CreateSale.service';
 import GetSaleService from '../services/GetSales.service';
 
 const CreateSalesSchema = object({
   client: string().required(),
-  products: array().of(string().required()).required(),
+  products: array(
+    object({
+      id: string().required(),
+      quantity: number().required(),
+    }),
+  ).required(),
 });
 
 export default class SalesController {
