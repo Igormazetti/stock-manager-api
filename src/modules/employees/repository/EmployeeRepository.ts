@@ -15,9 +15,13 @@ export default class EmployeeRepository {
     });
   }
 
-  public async getEmployees(): Promise<Employee[]> {
+  public async getEmployees({
+    active,
+  }: {
+    active?: boolean;
+  }): Promise<Employee[]> {
     const employee = await this.db.findMany({
-      where: { active: true },
+      where: { active },
     });
 
     return employee;

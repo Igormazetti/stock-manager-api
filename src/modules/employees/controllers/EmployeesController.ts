@@ -15,10 +15,16 @@ const UpdateEmployeeSchema = object({
   active: boolean(),
 });
 
+const filterEmployees = object({
+  active: boolean(),
+});
+
 export default class EmployeeController {
   public async getEmployees(request: Request, response: Response) {
+    const { active } = await filterEmployees.validate(request.query);
+
     const getEmployeeService = container.resolve(GetEmployeeService);
-    const employees = await getEmployeeService.execute();
+    const employees = await getEmployeeService.execute({ active });
 
     return response.status(employees.status).json(employees);
   }
