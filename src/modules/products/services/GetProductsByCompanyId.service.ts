@@ -10,7 +10,7 @@ export default class GetProductsByCompanyIdService {
     this.companyRepository = new CompanyRepository();
   }
 
-  public async execute(companyId: string, skip: number) {
+  public async execute(companyId: string, skip: number, name?: string) {
     const existingCompany = await this.companyRepository.findById(companyId);
 
     if (!existingCompany) {
@@ -24,6 +24,7 @@ export default class GetProductsByCompanyIdService {
       companyId,
       skip,
       8,
+      name,
     );
 
     const pages = Math.ceil(products.totalCount / 8);

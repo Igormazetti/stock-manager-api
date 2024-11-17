@@ -42,11 +42,22 @@ export default class ProductRepository {
     companyId: string,
     skip: number,
     take: number,
+    name?: string,
   ): Promise<{ products: Product[]; totalCount: number }> {
     const products = await this.db.findMany({
       skip,
       take,
-      where: { companyId },
+      where: {
+        companyId,
+        ...(name
+          ? {
+            title: {
+              contains: name,
+              mode: 'insensitive',
+            },
+          }
+          : {}),
+      },
     });
 
     const totalCount = await this.db.count({

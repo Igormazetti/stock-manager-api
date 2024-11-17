@@ -46,7 +46,7 @@ export default class ProductController {
   }
 
   public async getProductByCompanyId(request: Request, response: Response) {
-    const { skip } = request.query;
+    const { skip, name } = request.query;
     const companyId = request.company.id;
 
     const getProductsByCompanyIdService = container.resolve(
@@ -55,6 +55,7 @@ export default class ProductController {
     const products = await getProductsByCompanyIdService.execute(
       companyId,
       Number(skip),
+      name as string || undefined,
     );
 
     return response.status(products.status).json(products);
