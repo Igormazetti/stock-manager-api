@@ -12,6 +12,7 @@ export default class GetProductsByCompanyIdService {
 
   public async execute(companyId: string, skip: number, name?: string) {
     const existingCompany = await this.companyRepository.findById(companyId);
+    const take = 8;
 
     if (!existingCompany) {
       return {
@@ -23,7 +24,7 @@ export default class GetProductsByCompanyIdService {
     const products = await this.productRepository.getProductsByCompanyId(
       companyId,
       skip,
-      8,
+      take,
       name,
     );
 

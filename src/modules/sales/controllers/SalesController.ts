@@ -35,10 +35,16 @@ export default class SalesController {
   }
 
   public async getAll(request: Request, response: Response) {
-    const getSaleService = container.resolve(GetSaleService);
+    const { skip, createdAt } = request.query;
     const companyId = request.company.id;
 
-    const sales = await getSaleService.execute(companyId);
+    const getSaleService = container.resolve(GetSaleService);
+
+    const sales = await getSaleService.execute(
+      companyId,
+      Number(skip),
+      createdAt ? (createdAt as string) : undefined,
+    );
 
     return response.status(sales.status).json(sales);
   }

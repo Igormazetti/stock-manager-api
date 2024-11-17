@@ -43,6 +43,7 @@ model Sale {
   company_id  String
   employee_id String
   products    Product[]
+  createdAt   DateTime  @default(now())
 
   Company  Company           @relation(fields: [company_id], references: [id])
   Employee Employee?         @relation(fields: [employee_id], references: [id])

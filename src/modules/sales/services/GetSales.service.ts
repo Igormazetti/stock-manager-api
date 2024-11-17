@@ -11,8 +11,9 @@ export default class GetSaleService {
     this.salesRepository = new SalesRepository();
   }
 
-  public async execute(companyId: string) {
+  public async execute(companyId: string, skip: number, createdAt?: string) {
     const existingCompany = await this.companyRepository.findById(companyId);
+    const take = 30;
 
     if (!existingCompany) {
       return {
@@ -21,7 +22,12 @@ export default class GetSaleService {
       };
     }
 
-    const sales = await this.salesRepository.getSales(companyId);
+    const sales = await this.salesRepository.getSales(
+      companyId,
+      skip,
+      take,
+      createdAt,
+    );
 
     return {
       status: 200,

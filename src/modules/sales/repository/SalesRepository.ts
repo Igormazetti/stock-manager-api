@@ -9,10 +9,18 @@ export default class SalesRepository {
     this.db = prisma.sale;
   }
 
-  public async getSales(companyId: string): Promise<Sale[]> {
+  public async getSales(
+    companyId: string,
+    skip: number,
+    take: number,
+    createdAt?: string,
+  ): Promise<Sale[]> {
     const sales = await this.db.findMany({
+      skip,
+      take,
       where: {
         company_id: companyId,
+        ...(createdAt ? { createdAt } : {}),
       },
       include: {
         Products: {
@@ -20,6 +28,9 @@ export default class SalesRepository {
             Product: true,
           },
         },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
 
