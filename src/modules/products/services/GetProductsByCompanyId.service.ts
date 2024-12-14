@@ -28,7 +28,7 @@ export default class GetProductsByCompanyIdService {
       name,
     );
 
-    const pages = Math.ceil(products.totalCount / 8);
+    const pages = Math.ceil(products.totalCount / take);
 
     return {
       status: 200,

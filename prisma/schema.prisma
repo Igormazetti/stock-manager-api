@@ -38,15 +38,13 @@ model Company {
 }
 
 model Sale {
-  id          String    @id @default(uuid())
-  client      String
-  company_id  String
-  employee_id String
-  products    Product[]
-  createdAt   DateTime  @default(now())
+  id         String    @id @default(uuid())
+  client     String
+  company_id String
+  products   Product[]
+  createdAt  DateTime  @default(now())
 
   Company  Company           @relation(fields: [company_id], references: [id])
-  Employee Employee?         @relation(fields: [employee_id], references: [id])
   Products ProductsOnSales[]
 }
 
@@ -66,7 +64,6 @@ model Employee {
   id     String  @id @default(uuid())
   name   String
   active Boolean
-  sales  Sale[]
 }
 
 model Client {

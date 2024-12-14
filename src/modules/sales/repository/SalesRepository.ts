@@ -1,4 +1,3 @@
-import { Sale } from '@prisma/client';
 import { prisma } from '../../../database/prismaClient';
 import { SalesPayload } from '../types';
 
@@ -14,7 +13,7 @@ export default class SalesRepository {
     skip: number,
     take: number,
     createdAt?: string,
-  ): Promise<Sale[]> {
+  ) {
     const sales = await this.db.findMany({
       skip,
       take,
@@ -34,20 +33,22 @@ export default class SalesRepository {
       },
     });
 
-    return sales;
+    const totalCount = await this.db.count({
+      where: { company_id: companyId },
+    });
+
+    return { sales, totalCount };
   }
 
   public async createSale({
     client,
     companyId,
     products,
-    employeeId,
   }: SalesPayload): Promise<void> {
     await this.db.create({
       data: {
         client,
         company_id: companyId,
-        employee_id: employeeId,
         Products: {
           createMany: {
             data: products.map((product) => ({

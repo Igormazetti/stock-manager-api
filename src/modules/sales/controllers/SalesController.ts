@@ -6,7 +6,6 @@ import GetSaleService from '../services/GetSales.service';
 
 const CreateSalesSchema = object({
   client: string().required(),
-  employeeId: string().required(),
   products: array(
     object({
       id: string().required(),
@@ -17,10 +16,7 @@ const CreateSalesSchema = object({
 
 export default class SalesController {
   public async create(request: Request, response: Response) {
-    // eslint-disable-next-line max-len
-    const { client, products, employeeId } = await CreateSalesSchema.validate(
-      request.body,
-    );
+    const { client, products } = await CreateSalesSchema.validate(request.body);
     const creteSaleService = container.resolve(CreateSaleService);
     const companyId = request.company.id;
 
@@ -28,7 +24,6 @@ export default class SalesController {
       client,
       companyId,
       products,
-      employeeId,
     });
 
     return response.status(newSale.status).json(newSale);

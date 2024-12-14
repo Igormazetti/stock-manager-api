@@ -12,12 +12,7 @@ export default class CreateSaleService {
     this.productsRepository = new ProductRepository();
   }
 
-  public async execute({
-    client,
-    companyId,
-    products,
-    employeeId,
-  }: SalesPayload) {
+  public async execute({ client, companyId, products }: SalesPayload) {
     try {
       await Promise.all(
         products.map(async (product) => {
@@ -49,7 +44,6 @@ export default class CreateSaleService {
         client,
         companyId,
         products,
-        employeeId,
       });
 
       return {

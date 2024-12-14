@@ -29,9 +29,21 @@ export default class GetSaleService {
       createdAt,
     );
 
+    const pages = Math.ceil(sales.totalCount / take);
+
+    const formatedSales = sales.sales.map((sale) => {
+      const totalValue = sale.Products.reduce(
+        (acc, item) => acc + item.quantity_sold * item.Product.value,
+        0,
+      );
+
+      return { ...sale, totalValue };
+    });
+
     return {
       status: 200,
-      sales,
+      sales: formatedSales,
+      pages,
     };
   }
 }
