@@ -43,6 +43,8 @@ export default class ProductRepository {
     skip: number,
     take: number,
     name?: string,
+    order?: string,
+    outOfStock?: boolean
   ): Promise<{ products: Product[]; totalCount: number }> {
     const products = await this.db.findMany({
       skip,
@@ -57,7 +59,11 @@ export default class ProductRepository {
             },
           }
           : {}),
+          ...(outOfStock ? { quantity: 0 } : {}),
       },
+      orderBy: order === 'menor' 
+        ? { quantity: 'asc' } 
+        : { quantity: 'desc' }        
     });
 
     const totalCount = await this.db.count({

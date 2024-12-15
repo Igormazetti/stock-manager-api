@@ -10,7 +10,7 @@ export default class GetProductsByCompanyIdService {
     this.companyRepository = new CompanyRepository();
   }
 
-  public async execute(companyId: string, skip: number, name?: string) {
+  public async execute(companyId: string, skip: number, name?: string, order?: string) {
     const existingCompany = await this.companyRepository.findById(companyId);
     const take = 8;
 
@@ -21,11 +21,17 @@ export default class GetProductsByCompanyIdService {
       };
     }
 
+    const outOfStock = order === 'sem' ? true : false;
+
+    const orderBy = order === 'sem' ? undefined : order;
+
     const products = await this.productRepository.getProductsByCompanyId(
       companyId,
       skip,
       take,
       name,
+      orderBy,
+      outOfStock
     );
 
     const pages = Math.ceil(products.totalCount / take);
