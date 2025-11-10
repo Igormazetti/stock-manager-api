@@ -11,15 +11,16 @@ datasource db {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  title       String   @db.VarChar(255)
-  value       Float
-  description String
-  quantity    Int
-  companyId   String
-  imgUrl      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  title         String   @db.VarChar(255)
+  value         Float
+  originalValue Float    @default(0)
+  description   String
+  quantity      Int
+  companyId     String
+  imgUrl        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   Company Company           @relation(fields: [companyId], references: [id])
   sales   Sale[]

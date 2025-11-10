@@ -4,6 +4,7 @@ interface IRequest {
   productId: string;
   title?: string;
   value?: number;
+  originalValue?: number;
   description?: string;
   imgUrl?: string;
   quantity?: number;
@@ -20,6 +21,7 @@ export default class UpdateProductsService {
     productId,
     title,
     value,
+    originalValue,
     description,
     imgUrl,
     quantity,
@@ -36,6 +38,7 @@ export default class UpdateProductsService {
     await this.productRepository.updateProduct(productId, {
       title,
       value,
+      originalValue,
       description,
       imgUrl,
       quantity,

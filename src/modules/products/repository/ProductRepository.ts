@@ -4,6 +4,7 @@ import { prisma } from '../../../database/prismaClient';
 interface ProductPayload {
   title: string;
   value: number;
+  originalValue: number;
   description: string;
   imgUrl?: string;
   companyId: string;
@@ -13,6 +14,7 @@ interface ProductPayload {
 interface UpdateProductPayload {
   title?: string;
   value?: number;
+  originalValue?: number;
   description?: string;
   imgUrl?: string;
   quantity?: number;
@@ -28,13 +30,14 @@ export default class ProductRepository {
   public async createProduct({
     title,
     value,
+    originalValue,
     description,
     imgUrl,
     companyId,
     quantity,
   }: ProductPayload): Promise<void> {
     await this.db.create({
-      data: { title, value, description, imgUrl, companyId, quantity },
+      data: { title, value, originalValue, description, imgUrl, companyId, quantity },
     });
   }
 

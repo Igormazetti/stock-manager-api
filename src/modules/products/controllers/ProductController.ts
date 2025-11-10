@@ -10,6 +10,7 @@ import GetProductsByCompanyIdService from '../services/GetProductsByCompanyId.se
 const CreateProductSchema = object({
   title: string().required(),
   value: number().required(),
+  originalValue: number().required(),
   description: string().required(),
   imgUrl: string(),
   companyId: string().required(),
@@ -19,6 +20,7 @@ const CreateProductSchema = object({
 const UpdateProductSchema = object({
   title: string(),
   value: number(),
+  originalValue: number(),
   description: string(),
   imgUrl: string(),
   companyId: string(),
@@ -28,7 +30,7 @@ const UpdateProductSchema = object({
 export default class ProductController {
   public async create(request: Request, response: Response) {
     // eslint-disable-next-line max-len
-    const { title, value, description, imgUrl, quantity } =
+    const { title, value, originalValue, description, imgUrl, quantity } =
       await CreateProductSchema.validate(request.body);
     const creteProductService = container.resolve(CreateProductsService);
     const companyId = request.company.id;
@@ -36,6 +38,7 @@ export default class ProductController {
     const product = await creteProductService.execute({
       title,
       value,
+      originalValue,
       description,
       imgUrl,
       companyId,
@@ -65,7 +68,7 @@ export default class ProductController {
   public async update(request: Request, response: Response) {
     const { id } = request.params;
 
-    const { title, value, description, imgUrl, quantity } =
+    const { title, value, originalValue, description, imgUrl, quantity } =
       await UpdateProductSchema.validate(request.body);
     const updateProductService = container.resolve(UpdateProductsService);
 
@@ -73,6 +76,7 @@ export default class ProductController {
       productId: id,
       title,
       value,
+      originalValue,
       description,
       imgUrl,
       quantity,
