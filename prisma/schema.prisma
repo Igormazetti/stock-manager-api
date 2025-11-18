@@ -40,13 +40,16 @@ model Company {
 }
 
 model Sale {
-  id         String    @id @default(uuid())
-  client     String
-  company_id String
-  products   Product[]
-  createdAt  DateTime  @default(now())
+  id           String    @id @default(uuid())
+  clientId     String
+  company_id   String
+  discount     Float?    @default(0)
+  observation  String?   @db.Text
+  products     Product[]
+  createdAt    DateTime  @default(now())
 
   Company  Company           @relation(fields: [company_id], references: [id])
+  Client   Client            @relation(fields: [clientId], references: [id])
   Products ProductsOnSales[]
 }
 
@@ -79,4 +82,5 @@ model Client {
   updatedAt    DateTime @updatedAt
 
   Company Company @relation(fields: [companyId], references: [id])
+  Sales   Sale[]
 }

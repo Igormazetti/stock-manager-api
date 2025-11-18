@@ -12,7 +12,7 @@ export default class CreateSaleService {
     this.productsRepository = new ProductRepository();
   }
 
-  public async execute({ client, companyId, products }: SalesPayload) {
+  public async execute({ clientId, companyId, products, discount, observation }: SalesPayload) {
     try {
       await Promise.all(
         products.map(async (product) => {
@@ -39,11 +39,13 @@ export default class CreateSaleService {
           });
         }),
       );
-
+      console.log(discount);
       await this.salesRepository.createSale({
-        client,
+        clientId,
         companyId,
         products,
+        discount,
+        observation,
       });
 
       return {

@@ -11,7 +11,7 @@ export default class GetSaleService {
     this.salesRepository = new SalesRepository();
   }
 
-  public async execute(companyId: string, skip: number, createdAt?: string) {
+  public async execute(companyId: string, skip: number, createdAt?: string, clientName?: string, product?: string) {
     const existingCompany = await this.companyRepository.findById(companyId);
     const take = 30;
 
@@ -27,17 +27,21 @@ export default class GetSaleService {
       skip,
       take,
       createdAt,
+      clientName,
+      product,
     );
 
     const pages = Math.ceil(sales.totalCount / take);
 
     const formatedSales = sales.sales.map((sale) => {
-      const totalValue = sale.Products.reduce(
+      const subtotal = sale.Products.reduce(
         (acc, item) => acc + item.quantity_sold * item.Product.value,
         0,
       );
 
-      return { ...sale, totalValue };
+      const totalValue = subtotal - (sale.discount || 0);
+
+      return { ...sale, subtotal, totalValue };
     });
 
     return {

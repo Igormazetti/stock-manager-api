@@ -14,7 +14,7 @@ Authorization: Bearer <token>
 ## Company Routes (`/company`)
 
 ### Register Company
-**POST** `/company/create`
+**POST** `/company`
 ```json
 {
   "name": "My Company",
@@ -136,7 +136,7 @@ Authorization: Bearer <token>
 **POST** `/sales/create`
 ```json
 {
-  "client": "Client Name",
+  "clientId": "Client ID",
   "products": [
     {
       "productId": "uuid",

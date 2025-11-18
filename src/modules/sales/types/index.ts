@@ -1,6 +1,8 @@
 export interface SalesPayload {
-  client: string;
+  clientId: string;
   companyId: string;
+  discount?: number;
+  observation?: string;
   products: {
     id: string;
     quantity: number;
