@@ -54,4 +54,21 @@ export default class CompanyRepository {
 
     return company;
   }
+
+  public async updateCompany(
+    id: string,
+    data: {
+      name?: string;
+      email?: string;
+      password?: string;
+      logoUrl?: string;
+    },
+  ): Promise<Company> {
+    const company = await this.db.update({
+      where: { id },
+      data,
+    });
+
+    return company;
+  }
 }

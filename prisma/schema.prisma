@@ -13,6 +13,7 @@ datasource db {
 model Product {
   id            String   @id @default(uuid())
   title         String   @db.VarChar(255)
+  code          String?  @db.VarChar(255)
   value         Float
   originalValue Float    @default(0)
   description   String
@@ -33,6 +34,7 @@ model Company {
   email    String  @unique
   valid    Boolean @default(true)
   password String  @db.VarChar(255)
+  logoUrl  String? @db.Text
 
   product Product[]
   sales   Sale[]

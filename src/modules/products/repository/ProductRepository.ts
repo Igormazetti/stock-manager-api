@@ -3,6 +3,7 @@ import { prisma } from '../../../database/prismaClient';
 
 interface ProductPayload {
   title: string;
+  code?: string;
   value: number;
   originalValue: number;
   description: string;
@@ -13,6 +14,7 @@ interface ProductPayload {
 
 interface UpdateProductPayload {
   title?: string;
+  code?: string;
   value?: number;
   originalValue?: number;
   description?: string;
@@ -29,6 +31,7 @@ export default class ProductRepository {
 
   public async createProduct({
     title,
+    code,
     value,
     originalValue,
     description,
@@ -37,7 +40,7 @@ export default class ProductRepository {
     quantity,
   }: ProductPayload): Promise<void> {
     await this.db.create({
-      data: { title, value, originalValue, description, imgUrl, companyId, quantity },
+      data: { title, code, value, originalValue, description, imgUrl, companyId, quantity },
     });
   }
 
@@ -56,17 +59,27 @@ export default class ProductRepository {
         companyId,
         ...(name
           ? {
-            title: {
-              contains: name,
-              mode: 'insensitive',
-            },
+            OR: [
+              {
+                title: {
+                  contains: name,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                code: {
+                  contains: name,
+                  mode: 'insensitive',
+                },
+              },
+            ],
           }
           : {}),
           ...(outOfStock ? { quantity: 0 } : {}),
       },
-      orderBy: order === 'menor' 
-        ? { quantity: 'asc' } 
-        : { quantity: 'desc' }        
+      orderBy: order === 'menor'
+        ? { quantity: 'asc' }
+        : { quantity: 'desc' }
     });
 
     const totalCount = await this.db.count({

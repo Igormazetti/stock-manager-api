@@ -2,6 +2,7 @@ import ProductRepository from '../repository/ProductRepository';
 
 interface IRequest {
   title: string;
+  code?: string;
   value: number;
   originalValue: number;
   description: string;
@@ -19,6 +20,7 @@ export default class CreateProductsService {
 
   public async execute({
     title,
+    code,
     value,
     originalValue,
     description,
@@ -40,6 +42,7 @@ export default class CreateProductsService {
 
     await this.productRepository.createProduct({
       title,
+      code,
       value,
       originalValue,
       description,

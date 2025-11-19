@@ -9,6 +9,7 @@ import GetProductsByCompanyIdService from '../services/GetProductsByCompanyId.se
 
 const CreateProductSchema = object({
   title: string().required(),
+  code: string().optional(),
   value: number().required(),
   originalValue: number().required(),
   description: string().required(),
@@ -19,6 +20,7 @@ const CreateProductSchema = object({
 
 const UpdateProductSchema = object({
   title: string(),
+  code: string().optional(),
   value: number(),
   originalValue: number(),
   description: string(),
@@ -30,13 +32,14 @@ const UpdateProductSchema = object({
 export default class ProductController {
   public async create(request: Request, response: Response) {
     // eslint-disable-next-line max-len
-    const { title, value, originalValue, description, imgUrl, quantity } =
+    const { title, code, value, originalValue, description, imgUrl, quantity } =
       await CreateProductSchema.validate(request.body);
     const creteProductService = container.resolve(CreateProductsService);
     const companyId = request.company.id;
 
     const product = await creteProductService.execute({
       title,
+      code,
       value,
       originalValue,
       description,
@@ -68,13 +71,14 @@ export default class ProductController {
   public async update(request: Request, response: Response) {
     const { id } = request.params;
 
-    const { title, value, originalValue, description, imgUrl, quantity } =
+    const { title, code, value, originalValue, description, imgUrl, quantity } =
       await UpdateProductSchema.validate(request.body);
     const updateProductService = container.resolve(UpdateProductsService);
 
     const update = await updateProductService.execute({
       productId: id,
       title,
+      code,
       value,
       originalValue,
       description,

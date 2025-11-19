@@ -3,6 +3,7 @@ import ProductRepository from '../repository/ProductRepository';
 interface IRequest {
   productId: string;
   title?: string;
+  code?: string;
   value?: number;
   originalValue?: number;
   description?: string;
@@ -20,6 +21,7 @@ export default class UpdateProductsService {
   public async execute({
     productId,
     title,
+    code,
     value,
     originalValue,
     description,
@@ -37,6 +39,7 @@ export default class UpdateProductsService {
 
     await this.productRepository.updateProduct(productId, {
       title,
+      code,
       value,
       originalValue,
       description,

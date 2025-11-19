@@ -59,13 +59,14 @@ export default class SalesRepository {
       },
     });
 
-    // Filter by product name (in-memory filtering after database query)
+    // Filter by product name or code (in-memory filtering after database query)
     let filteredSales = sales;
     if (product) {
       const productLower = product.toLowerCase();
       filteredSales = sales.filter((sale) =>
         sale.Products.some((productOnSale) =>
-          productOnSale.Product.title.toLowerCase().includes(productLower),
+          productOnSale.Product.title.toLowerCase().includes(productLower) ||
+          (productOnSale.Product.code && productOnSale.Product.code.toLowerCase().includes(productLower)),
         ),
       );
     }
