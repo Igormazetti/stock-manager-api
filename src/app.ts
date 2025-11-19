@@ -6,6 +6,7 @@ import productRouter from './modules/products/routes/ProductRoutes';
 import companyRouter from './modules/companies/routes/CompanyRoutes';
 import salesRouter from './modules/sales/routes/sales.routes';
 import clientRouter from './modules/clients/routes/ClientRoutes';
+import notificationsRouter from './modules/notifications/routes/notifications.routes';
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use('/company', companyRouter);
 app.use('/sales', salesRouter);
 app.use('/employee', employeeRouter);
 app.use('/clients', clientRouter);
+app.use('/notifications', notificationsRouter);
 
 export default app;

@@ -250,6 +250,8 @@ reader.readAsDataURL(file);
 ```json
 {
   "clientId": "uuid",
+  "paid": true,
+  "paymentTime": "2025-11-18T14:30:00Z",
   "discount": 50,
   "observation": "Optional notes about the sale",
   "products": [
@@ -263,7 +265,9 @@ reader.readAsDataURL(file);
 
 **Request Fields:**
 - `clientId`: **Required** - UUID of the client
+- `paid`: **Required** - Boolean indicating if the sale was paid
 - `products`: **Required** - Array of products with `id` and `quantity`
+- `paymentTime`: **Optional** - ISO 8601 timestamp of payment (required if paid is true)
 - `discount`: **Optional** - Numeric discount value (default: 0)
 - `observation`: **Optional** - Text notes about the sale
 
@@ -274,14 +278,47 @@ reader.readAsDataURL(file);
 }
 ```
 
+**Notes:**
+- When a sale is created, automatic notifications are triggered:
+  - If a product stock reaches 0, a notification is created for "out of stock"
+  - If a product stock falls below 5 units, a notification is created for "low stock"
+
+### Update Sale
+**PATCH** `/sales/:id`
+
+**Request:**
+```json
+{
+  "paid": true,
+  "paymentTime": "2025-11-18T14:30:00Z"
+}
+```
+
+**Request Fields:**
+- `paid`: **Optional** - Boolean indicating if the sale was paid
+- `paymentTime`: **Optional** - ISO 8601 timestamp of payment
+
+**Response:**
+```json
+{
+  "status": 200
+}
+```
+
+**Error Responses:**
+- `404` - Sale not found
+
 ### List Sales
-**GET** `/sales?skip=0&clientName=João&product=notebook&createdAt=2025-11-18`
+**GET** `/sales?skip=0&clientName=João&product=notebook&createdAt=2025-11-18&paid=true&paymentTimeStart=2025-11-01&paymentTimeEnd=2025-11-30`
 
 **Query Params:**
 - `skip`: Pagination offset (default: 0)
 - `clientName`: Filter by client name - partial, case-insensitive match (optional)
-- `product`: Filter by product name - partial, case-insensitive match (optional)
+- `product`: Filter by product name or code - partial, case-insensitive match (optional)
 - `createdAt`: Filter by date (format: YYYY-MM-DD) - returns sales from that entire day (optional)
+- `paid`: Filter by payment status - `true` or `false` (optional)
+- `paymentTimeStart`: Filter by payment time start date (ISO 8601 format) (optional)
+- `paymentTimeEnd`: Filter by payment time end date (ISO 8601 format) (optional)
 
 **Response:**
 ```json
@@ -292,6 +329,8 @@ reader.readAsDataURL(file);
       "id": "uuid",
       "clientId": "uuid",
       "company_id": "uuid",
+      "paid": true,
+      "paymentTime": "2025-11-18T14:30:00Z",
       "discount": 50,
       "observation": "Sale notes",
       "createdAt": "2025-11-18T10:30:00Z",
@@ -313,6 +352,7 @@ reader.readAsDataURL(file);
           "Product": {
             "id": "uuid",
             "title": "Product Name",
+            "code": "SKU-001",
             "value": 250,
             "originalValue": 200,
             "description": "Product description",
@@ -325,6 +365,62 @@ reader.readAsDataURL(file);
   "pages": 5
 }
 ```
+
+---
+
+## Notifications Routes (`/notifications`)
+
+### List Notifications
+**GET** `/notifications?skip=0&take=50`
+
+**Query Params:**
+- `skip`: Pagination offset (default: 0)
+- `take`: Number of notifications to fetch (default: 50)
+
+**Response:**
+```json
+{
+  "status": 200,
+  "data": [
+    {
+      "id": "uuid",
+      "companyId": "uuid",
+      "entity": "PRODUCTS",
+      "description": "Produto X saiu do estoque",
+      "productName": "Product Name",
+      "readed": false,
+      "createdAt": "2025-11-18T14:30:00Z"
+    },
+    {
+      "id": "uuid",
+      "companyId": "uuid",
+      "entity": "PRODUCTS",
+      "description": "Produto Y está com estoque baixo (3 unidades)",
+      "productName": "Product Y",
+      "readed": true,
+      "createdAt": "2025-11-18T13:00:00Z"
+    }
+  ],
+  "totalCount": 25
+}
+```
+
+### Mark Notification as Read
+**PATCH** `/notifications/:id`
+
+**Response:**
+```json
+{
+  "status": 200
+}
+```
+
+**Notes:**
+- Notifications are created automatically when:
+  - A sale is created and a product's stock reaches 0 (out of stock)
+  - A sale is created and a product's stock falls below 5 units (low stock)
+- Each product in a sale that triggers a threshold gets its own notification
+- The `entity` field currently uses "PRODUCTS" for product-related notifications
 
 ---
 

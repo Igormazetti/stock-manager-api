@@ -15,6 +15,9 @@ export default class SalesRepository {
     createdAt?: string,
     clientName?: string,
     product?: string,
+    paid?: boolean,
+    paymentTimeStart?: string,
+    paymentTimeEnd?: string,
   ) {
     const whereConditions: any = {
       company_id: companyId,
@@ -40,6 +43,24 @@ export default class SalesRepository {
           mode: 'insensitive',
         },
       };
+    }
+
+    // Filter by paid status
+    if (paid !== undefined) {
+      whereConditions.paid = paid;
+    }
+
+    // Filter by payment time range
+    if (paymentTimeStart || paymentTimeEnd) {
+      whereConditions.paymentTime = {};
+
+      if (paymentTimeStart) {
+        whereConditions.paymentTime.gte = new Date(paymentTimeStart);
+      }
+
+      if (paymentTimeEnd) {
+        whereConditions.paymentTime.lte = new Date(paymentTimeEnd);
+      }
     }
 
     const sales = await this.db.findMany({
@@ -84,14 +105,17 @@ export default class SalesRepository {
     products,
     discount,
     observation,
+    paid,
+    paymentTime,
   }: SalesPayload): Promise<void> {
-    console.log(discount, 'discount aqui');
     await this.db.create({
       data: {
         clientId,
         company_id: companyId,
         discount: discount || 0,
         observation,
+        paid,
+        paymentTime,
         Products: {
           createMany: {
             data: products.map((product) => ({
@@ -101,6 +125,30 @@ export default class SalesRepository {
           },
         },
       },
+    });
+  }
+
+  public async getSaleById(saleId: string, companyId: string) {
+    return this.db.findFirst({
+      where: {
+        id: saleId,
+        company_id: companyId,
+      },
+    });
+  }
+
+  public async updateSale(
+    saleId: string,
+    data: {
+      paid?: boolean;
+      paymentTime?: Date | null;
+    },
+  ): Promise<void> {
+    await this.db.update({
+      where: {
+        id: saleId,
+      },
+      data,
     });
   }
 }

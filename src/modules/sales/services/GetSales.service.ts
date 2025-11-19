@@ -11,7 +11,16 @@ export default class GetSaleService {
     this.salesRepository = new SalesRepository();
   }
 
-  public async execute(companyId: string, skip: number, createdAt?: string, clientName?: string, product?: string) {
+  public async execute(
+    companyId: string,
+    skip: number,
+    createdAt?: string,
+    clientName?: string,
+    product?: string,
+    paid?: boolean,
+    paymentTimeStart?: string,
+    paymentTimeEnd?: string,
+  ) {
     const existingCompany = await this.companyRepository.findById(companyId);
     const take = 30;
 
@@ -29,6 +38,9 @@ export default class GetSaleService {
       createdAt,
       clientName,
       product,
+      paid,
+      paymentTimeStart,
+      paymentTimeEnd,
     );
 
     const pages = Math.ceil(sales.totalCount / take);

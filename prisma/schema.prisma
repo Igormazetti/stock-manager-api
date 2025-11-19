@@ -29,26 +29,29 @@ model Product {
 }
 
 model Company {
-  id       String  @id @default(uuid())
-  name     String  @unique @db.VarChar(255)
-  email    String  @unique
-  valid    Boolean @default(true)
-  password String  @db.VarChar(255)
-  logoUrl  String? @db.Text
+  id            String  @id @default(uuid())
+  name          String  @unique @db.VarChar(255)
+  email         String  @unique
+  valid         Boolean @default(true)
+  password      String  @db.VarChar(255)
+  logoUrl       String? @db.Text
 
-  product Product[]
-  sales   Sale[]
-  clients Client[]
+  product       Product[]
+  sales         Sale[]
+  clients       Client[]
+  notifications Notification[]
 }
 
 model Sale {
-  id           String    @id @default(uuid())
-  clientId     String
-  company_id   String
-  discount     Float?    @default(0)
-  observation  String?   @db.Text
-  products     Product[]
-  createdAt    DateTime  @default(now())
+  id            String    @id @default(uuid())
+  clientId      String
+  company_id    String
+  discount      Float?    @default(0)
+  observation   String?   @db.Text
+  paid          Boolean   @default(false)
+  paymentTime   DateTime?
+  products      Product[]
+  createdAt     DateTime  @default(now())
 
   Company  Company           @relation(fields: [company_id], references: [id])
   Client   Client            @relation(fields: [clientId], references: [id])
@@ -85,4 +88,16 @@ model Client {
 
   Company Company @relation(fields: [companyId], references: [id])
   Sales   Sale[]
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  companyId   String
+  entity      String   @db.VarChar(50)
+  description String   @db.Text
+  productName String?  @db.VarChar(255)
+  readed        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  Company Company @relation(fields: [companyId], references: [id])
 }
