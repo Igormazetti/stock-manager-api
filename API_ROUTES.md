@@ -247,17 +247,20 @@ reader.readAsDataURL(file);
 
 ### Create Sale
 **POST** `/sales/create`
+
+Creates a new sale with per-product pricing flexibility. Each product can have its own sale price, allowing the seller to increase or decrease individual product prices at the moment of sale.
+
 ```json
 {
   "clientId": "uuid",
   "paid": true,
   "paymentTime": "2025-11-18T14:30:00Z",
-  "discount": 50,
   "observation": "Optional notes about the sale",
   "products": [
     {
-      "id": "uuid",
-      "quantity": 2
+      "id": "product-uuid",
+      "quantity": 2,
+      "productSaleValue": 250.00
     }
   ]
 }
@@ -266,10 +269,14 @@ reader.readAsDataURL(file);
 **Request Fields:**
 - `clientId`: **Required** - UUID of the client
 - `paid`: **Required** - Boolean indicating if the sale was paid
-- `products`: **Required** - Array of products with `id` and `quantity`
+- `products`: **Required** - Array of products with `id`, `quantity`, and `productSaleValue`
 - `paymentTime`: **Optional** - ISO 8601 timestamp of payment (required if paid is true)
-- `discount`: **Optional** - Numeric discount value (default: 0)
 - `observation`: **Optional** - Text notes about the sale
+
+**Product Fields:**
+- `id`: **Required** - UUID of the product
+- `quantity`: **Required** - Quantity of the product being sold
+- `productSaleValue`: **Required** - Actual price per unit for this product in this specific sale. This allows the seller to increase or decrease the product price from its standard value
 
 **Response:**
 ```json
@@ -279,6 +286,7 @@ reader.readAsDataURL(file);
 ```
 
 **Notes:**
+- The `productSaleValue` is the final price per unit for each product in the sale. This replaces the old discount system, giving more granular control over pricing.
 - When a sale is created, automatic notifications are triggered:
   - If a product stock reaches 0, a notification is created for "out of stock"
   - If a product stock falls below 5 units, a notification is created for "low stock"
@@ -311,6 +319,8 @@ reader.readAsDataURL(file);
 ### List Sales
 **GET** `/sales?skip=0&clientName=João&product=notebook&createdAt=2025-11-18&paid=true&paymentTimeStart=2025-11-01&paymentTimeEnd=2025-11-30`
 
+Retrieves a paginated list of sales with detailed product information including per-product sale prices.
+
 **Query Params:**
 - `skip`: Pagination offset (default: 0)
 - `clientName`: Filter by client name - partial, case-insensitive match (optional)
@@ -331,11 +341,9 @@ reader.readAsDataURL(file);
       "company_id": "uuid",
       "paid": true,
       "paymentTime": "2025-11-18T14:30:00Z",
-      "discount": 50,
       "observation": "Sale notes",
       "createdAt": "2025-11-18T10:30:00Z",
-      "subtotal": 500,
-      "totalValue": 450,
+      "totalValue": 500,
       "Client": {
         "id": "uuid",
         "name": "Client Name",
@@ -349,6 +357,7 @@ reader.readAsDataURL(file);
           "product_id": "uuid",
           "sale_id": "uuid",
           "quantity_sold": 2,
+          "productSaleValue": 250.00,
           "Product": {
             "id": "uuid",
             "title": "Product Name",
@@ -365,6 +374,13 @@ reader.readAsDataURL(file);
   "pages": 5
 }
 ```
+
+**Response Fields:**
+- `status`: HTTP status code (200 for success)
+- `sales`: Array of sale objects
+- `pages`: Total number of pages for pagination
+- `totalValue`: Total value of the sale calculated as SUM(quantity_sold × productSaleValue) for all products
+- `productSaleValue`: The actual price per unit that was charged for each product in this specific sale
 
 ---
 

@@ -46,7 +46,6 @@ model Sale {
   id            String    @id @default(uuid())
   clientId      String
   company_id    String
-  discount      Float?    @default(0)
   observation   String?   @db.Text
   paid          Boolean   @default(false)
   paymentTime   DateTime?
@@ -59,10 +58,11 @@ model Sale {
 }
 
 model ProductsOnSales {
-  id            String @id @unique @default(uuid())
-  product_id    String
-  sale_id       String
-  quantity_sold Int    @default(1)
+  id               String  @id @unique @default(uuid())
+  product_id       String
+  sale_id          String
+  quantity_sold    Int     @default(1)
+  productSaleValue Float   @default(0)
 
   Product Product @relation(fields: [product_id], references: [id])
   Sale    Sale    @relation(fields: [sale_id], references: [id])

@@ -15,7 +15,7 @@ export default class CreateSaleService {
     this.createNotificationService = new CreateNotificationService();
   }
 
-  public async execute({ clientId, companyId, products, discount, observation, paid, paymentTime }: SalesPayload) {
+  public async execute({ clientId, companyId, products, observation, paid, paymentTime }: SalesPayload) {
     try {
       // Track updated products for notifications
       const productsToNotify: Array<{ id: string; title: string; quantity: number }> = [];
@@ -58,7 +58,6 @@ export default class CreateSaleService {
         clientId,
         companyId,
         products,
-        discount,
         observation,
         paid,
         paymentTime,

@@ -103,7 +103,6 @@ export default class SalesRepository {
     clientId,
     companyId,
     products,
-    discount,
     observation,
     paid,
     paymentTime,
@@ -112,7 +111,6 @@ export default class SalesRepository {
       data: {
         clientId,
         company_id: companyId,
-        discount: discount || 0,
         observation,
         paid,
         paymentTime,
@@ -121,6 +119,7 @@ export default class SalesRepository {
             data: products.map((product) => ({
               product_id: product.id,
               quantity_sold: product.quantity,
+              productSaleValue: product.productSaleValue,
             })),
           },
         },

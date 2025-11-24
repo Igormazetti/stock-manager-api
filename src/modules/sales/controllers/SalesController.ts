@@ -7,7 +7,6 @@ import UpdateSaleService from '../services/UpdateSale.service';
 
 const CreateSalesSchema = object({
   clientId: string().required(),
-  discount: number().optional(),
   observation: string().optional(),
   paid: boolean().required(),
   paymentTime: date().optional().nullable(),
@@ -15,6 +14,7 @@ const CreateSalesSchema = object({
     object({
       id: string().required(),
       quantity: number().required(),
+      productSaleValue: number().required(),
     }),
   ).required(),
 });
@@ -27,7 +27,7 @@ const UpdateSaleSchema = object({
 export default class SalesController {
   public async create(request: Request, response: Response) {
 
-    const { clientId, products, discount, observation, paid, paymentTime } = await CreateSalesSchema.validate(request.body);
+    const { clientId, products, observation, paid, paymentTime } = await CreateSalesSchema.validate(request.body);
     const creteSaleService = container.resolve(CreateSaleService);
     const companyId = request.company.id;
 
@@ -35,7 +35,6 @@ export default class SalesController {
       clientId,
       companyId,
       products,
-      discount,
       observation,
       paid,
       paymentTime,

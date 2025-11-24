@@ -46,14 +46,12 @@ export default class GetSaleService {
     const pages = Math.ceil(sales.totalCount / take);
 
     const formatedSales = sales.sales.map((sale) => {
-      const subtotal = sale.Products.reduce(
-        (acc, item) => acc + item.quantity_sold * item.Product.value,
+      const totalValue = sale.Products.reduce(
+        (acc, item) => acc + item.quantity_sold * item.productSaleValue,
         0,
       );
 
-      const totalValue = subtotal - (sale.discount || 0);
-
-      return { ...sale, subtotal, totalValue };
+      return { ...sale, totalValue };
     });
 
     return {
