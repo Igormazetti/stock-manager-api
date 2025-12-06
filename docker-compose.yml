@@ -7,10 +7,36 @@ services:
     environment:
       - POSTGRES_USER=igor
       - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=mydb
     ports:
       - '5432:5432'
     volumes:
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U igor -d mydb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 'StockManager-API'
+    restart: always
+    ports:
+      - '6060:6060'
+    environment:
+      - PORT=6060
+      - DATABASE_URL=postgresql://igor:1234@db:5432/mydb?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npx prisma migrate deploy && npm run dev"
+
 volumes:
   db:
     driver: local
