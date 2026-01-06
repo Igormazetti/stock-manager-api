@@ -17,7 +17,6 @@ export default class CreateSaleService {
 
   public async execute({ clientId, companyId, products, observation, paid, paymentTime }: SalesPayload) {
     try {
-      // Track updated products for notifications
       const productsToNotify: Array<{ id: string; title: string; quantity: number }> = [];
 
       await Promise.all(
@@ -63,7 +62,6 @@ export default class CreateSaleService {
         paymentTime,
       });
 
-      // Create notifications for products with low stock or out of stock
       for (const product of productsToNotify) {
         if (product.quantity === 0) {
           await this.createNotificationService.execute({

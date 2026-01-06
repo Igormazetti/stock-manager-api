@@ -8,7 +8,7 @@ import UpdateSaleService from '../services/UpdateSale.service';
 const CreateSalesSchema = object({
   clientId: string().required(),
   observation: string().optional(),
-  paid: boolean().required(),
+  paid: boolean().optional(),
   paymentTime: date().optional().nullable(),
   products: array(
     object({
@@ -36,7 +36,7 @@ export default class SalesController {
       companyId,
       products,
       observation,
-      paid,
+      paid: paid || false,
       paymentTime,
     });
 
