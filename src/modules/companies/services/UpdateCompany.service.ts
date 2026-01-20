@@ -4,6 +4,12 @@ interface IUpdateCompanyData {
   name?: string;
   email?: string;
   logoUrl?: string;
+  cnpj?: string;
+  address?: string;
+  phone?: string;
+  cep?: string;
+  city?: string;
+  state?: string;
 }
 
 export default class UpdateCompanyService {
@@ -44,6 +50,12 @@ export default class UpdateCompanyService {
         email: updatedCompany.email,
         logoUrl: updatedCompany.logoUrl,
         valid: updatedCompany.valid,
+        cnpj: updatedCompany.cnpj,
+        address: updatedCompany.address,
+        phone: updatedCompany.phone,
+        cep: updatedCompany.cep,
+        city: updatedCompany.city,
+        state: updatedCompany.state,
       },
     };
   }

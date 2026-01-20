@@ -1,3 +1,4 @@
+import { prisma } from '../../../database/prismaClient';
 import Encrypt from '../../../utils/hash';
 import CompanyRepository from '../repository/CompanyRepository';
 
@@ -22,10 +23,16 @@ export default class CreateCompanyService {
       };
     }
 
+    // Buscar a role Admin global
+    const adminRole = await prisma.role.findFirst({
+      where: { name: 'Admin', companyId: null },
+    });
+
     const company = await this.companyRepository.createCompany({
       name,
       email,
       password: hashPassword,
+      defaultRoleId: adminRole?.id,
     });
 
     return {

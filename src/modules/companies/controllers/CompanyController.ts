@@ -4,6 +4,7 @@ import CreateCompanyService from '../services/CreateCompanyService.service';
 import LoginService from '../services/Login.service';
 import ResetPasswordService from '../services/ResetPassword.service';
 import UpdateCompanyService from '../services/UpdateCompany.service';
+import GetCompanyService from '../services/GetCompany.service';
 
 export default class CompanyController {
   public async create(request: Request, response: Response) {
@@ -37,7 +38,7 @@ export default class CompanyController {
   }
 
   public async update(request: Request, response: Response) {
-    const { name, email, logoUrl } = request.body;
+    const { name, email, logoUrl, cnpj, address, phone, cep, city, state } = request.body;
     const companyId = request.company.id;
 
     const updateCompanyService = container.resolve(UpdateCompanyService);
@@ -46,7 +47,23 @@ export default class CompanyController {
       name,
       email,
       logoUrl,
+      cnpj,
+      address,
+      phone,
+      cep,
+      city,
+      state,
     });
+
+    return response.status(result.status).json(result);
+  }
+
+  public async get(request: Request, response: Response) {
+    const companyId = request.company.id;
+
+    const getCompanyService = container.resolve(GetCompanyService);
+
+    const result = await getCompanyService.execute(companyId);
 
     return response.status(result.status).json(result);
   }

@@ -29,17 +29,27 @@ model Product {
 }
 
 model Company {
-  id            String  @id @default(uuid())
-  name          String  @unique @db.VarChar(255)
-  email         String  @unique
-  valid         Boolean @default(true)
-  password      String  @db.VarChar(255)
-  logoUrl       String? @db.Text
+  id            String   @id @default(uuid())
+  name          String   @unique @db.VarChar(255)
+  email         String   @unique
+  valid         Boolean  @default(true)
+  password      String   @db.VarChar(255)
+  logoUrl       String?  @db.Text
+  cnpj          String?
+  address       String?
+  phone         String?
+  cep           String?
+  city          String?
+  state         String?
+  defaultRoleId String?
 
+  DefaultRole   Role?          @relation("CompanyDefaultRole", fields: [defaultRoleId], references: [id])
   product       Product[]
   sales         Sale[]
   clients       Client[]
   notifications Notification[]
+  employees     Employee[]
+  customRoles   Role[]         @relation("CompanyCustomRoles")
 }
 
 model Sale {
@@ -71,9 +81,51 @@ model ProductsOnSales {
 }
 
 model Employee {
-  id     String  @id @default(uuid())
-  name   String
-  active Boolean
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  active    Boolean  @default(true)
+  companyId String
+  roleId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Company Company @relation(fields: [companyId], references: [id])
+  Role    Role    @relation(fields: [roleId], references: [id])
+}
+
+model Permission {
+  id          Int    @id @default(autoincrement())
+  permission  String @unique
+  description String
+
+  roles RolePermission[]
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  companyId   String?
+  createdAt   DateTime @default(now())
+
+  Company     Company?         @relation("CompanyCustomRoles", fields: [companyId], references: [id])
+  permissions RolePermission[]
+  employees   Employee[]
+  companies   Company[]        @relation("CompanyDefaultRole")
+
+  @@unique([name, companyId])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId Int
+
+  Role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  Permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
 }
 
 model Client {

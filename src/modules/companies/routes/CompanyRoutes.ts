@@ -9,5 +9,6 @@ companyRouter.post('/', companyController.create);
 companyRouter.post('/login', companyController.login);
 companyRouter.post('/reset-password', authMiddleware, companyController.resetPassword);
 companyRouter.put('/update', authMiddleware, companyController.update);
+companyRouter.get('/', authMiddleware, companyController.get);
 
 export default companyRouter;

@@ -1,52 +1,87 @@
-import { Employee } from '@prisma/client';
 import { prisma } from '../../../database/prismaClient';
-import { EmployeePayload, UpdateEmployeePayload } from '../types';
+import { CreateEmployeePayload, UpdateEmployeePayload } from '../types';
 
 export default class EmployeeRepository {
-  private db: typeof prisma.employee;
+  private db = prisma.employee;
 
-  constructor() {
-    this.db = prisma.employee;
-  }
-
-  public async createEmployee({ name }: EmployeePayload): Promise<void> {
-    await this.db.create({
-      data: { name, active: true },
+  public async create(data: CreateEmployeePayload) {
+    return this.db.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        roleId: data.roleId,
+        companyId: data.companyId,
+      },
+      include: {
+        Role: {
+          include: {
+            permissions: {
+              include: {
+                Permission: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
-  public async getEmployees({
-    active,
-  }: {
-    active?: boolean;
-  }): Promise<Employee[]> {
-    const employee = await this.db.findMany({
-      where: { active },
+  public async getByCompanyId(companyId: string, active?: boolean) {
+    return this.db.findMany({
+      where: {
+        companyId,
+        ...(active !== undefined && { active }),
+      },
+      include: {
+        Role: true,
+      },
+      orderBy: { name: 'asc' },
     });
-
-    return employee;
   }
 
-  public async getByName(name: string): Promise<Employee | null> {
-    const employee = await this.db.findFirst({
-      where: { name },
-    });
-
-    return employee;
-  }
-
-  public async getById(id: string): Promise<Employee | null> {
-    const employee = await this.db.findUnique({
+  public async getById(id: string) {
+    return this.db.findUnique({
       where: { id },
+      include: {
+        Role: {
+          include: {
+            permissions: {
+              include: {
+                Permission: true,
+              },
+            },
+          },
+        },
+      },
     });
-
-    return employee;
   }
 
-  public async updateEmployee(id: string, data: UpdateEmployeePayload) {
-    await this.db.update({
+  public async getByEmail(email: string) {
+    return this.db.findUnique({
+      where: { email },
+    });
+  }
+
+  public async update(id: string, data: UpdateEmployeePayload) {
+    return this.db.update({
       where: { id },
-      data,
+      data: {
+        ...(data.name && { name: data.name }),
+        ...(data.email && { email: data.email }),
+        ...(data.password && { password: data.password }),
+        ...(data.roleId && { roleId: data.roleId }),
+        ...(data.active !== undefined && { active: data.active }),
+      },
+      include: {
+        Role: true,
+      },
+    });
+  }
+
+  public async delete(id: string) {
+    return this.db.delete({
+      where: { id },
     });
   }
 }
