@@ -6,6 +6,7 @@ interface ICompany {
   name: string;
   email: string;
   password: string;
+  defaultRoleId?: string;
 }
 
 export default class CompanyRepository {
@@ -18,12 +19,14 @@ export default class CompanyRepository {
     name,
     email,
     password,
+    defaultRoleId,
   }: ICompany): Promise<Company> {
     const user = await this.db.create({
       data: {
         name,
         email,
         password,
+        defaultRoleId,
       },
     });
 
@@ -62,6 +65,12 @@ export default class CompanyRepository {
       email?: string;
       password?: string;
       logoUrl?: string;
+      cnpj?: string;
+      address?: string;
+      phone?: string;
+      cep?: string;
+      city?: string;
+      state?: string;
     },
   ): Promise<Company> {
     const company = await this.db.update({

@@ -3,5 +3,11 @@ declare namespace Express {
     company: {
       id: string;
     };
+    user: {
+      id: string;
+      type: 'company' | 'employee';
+      companyId: string;
+      permissions: string[];
+    };
   }
 }
