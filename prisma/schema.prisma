@@ -26,6 +26,9 @@ model Product {
   Company Company           @relation(fields: [companyId], references: [id])
   sales   Sale[]
   Sales   ProductsOnSales[]
+
+  @@index([companyId])
+  @@index([companyId, quantity])
 }
 
 model Company {
@@ -65,6 +68,10 @@ model Sale {
   Company  Company           @relation(fields: [company_id], references: [id])
   Client   Client            @relation(fields: [clientId], references: [id])
   Products ProductsOnSales[]
+
+  @@index([company_id, createdAt(sort: Desc)])
+  @@index([company_id, paid])
+  @@index([clientId])
 }
 
 model ProductsOnSales {
@@ -77,6 +84,8 @@ model ProductsOnSales {
   Product Product @relation(fields: [product_id], references: [id])
   Sale    Sale    @relation(fields: [sale_id], references: [id])
 
+  @@index([sale_id])
+  @@index([product_id])
   @@map("productsOnSales")
 }
 
@@ -140,6 +149,8 @@ model Client {
 
   Company Company @relation(fields: [companyId], references: [id])
   Sales   Sale[]
+
+  @@index([companyId, createdAt(sort: Desc)])
 }
 
 model Notification {
@@ -152,4 +163,6 @@ model Notification {
   createdAt   DateTime @default(now())
 
   Company Company @relation(fields: [companyId], references: [id])
+
+  @@index([companyId, createdAt(sort: Desc)])
 }
