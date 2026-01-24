@@ -14,11 +14,10 @@ import roleRouter from './modules/roles/routes/RoleRoutes';
 const app = express();
 
 const corsOptions = {
-  origin: ['https://www.zenstock.com.br', 'https://zenstock.com.br'],
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Cache-Control', 'Pragma'],
   exposedHeaders: ['Content-Length', 'X-Request-Id'],
-  credentials: true,
   maxAge: 86400,
   preflightContinue: false,
   optionsSuccessStatus: 204
