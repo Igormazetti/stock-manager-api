@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch ./src/server.ts",
+    "build": "tsc",
     "prisma": "npx prisma",
     "prisma-setup": "npx prisma migrate dev && npx prisma generate"
   },
@@ -29,7 +30,7 @@
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsx": "^3.12.7",
-    "typescript": "^4.7.4"
+    "typescript": "^5.6.0"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

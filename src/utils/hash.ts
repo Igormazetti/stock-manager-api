@@ -10,3 +10,6 @@ export default class Encrypt {
   public checkPassword = (password: string, passwordDb: string) =>
     bcrypt.compareSync(password, passwordDb);
 }
+
+export const checkPassword = (password: string, passwordDb: string) =>
+  bcrypt.compareSync(password, passwordDb);
