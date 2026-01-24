@@ -26,6 +26,15 @@ model Product {
   Company Company           @relation(fields: [companyId], references: [id])
   sales   Sale[]
   Sales   ProductsOnSales[]
+
+  // Index for filtering by company (used in all product queries)
+  @@index([companyId])
+  // Composite index for company + quantity sorting (used in stock ordering)
+  @@index([companyId, quantity])
+  // Index for text search on title (used in product search)
+  @@index([title])
+  // Index for text search on code (used in product search)
+  @@index([code])
 }
 
 model Company {
@@ -65,6 +74,19 @@ model Sale {
   Company  Company           @relation(fields: [company_id], references: [id])
   Client   Client            @relation(fields: [clientId], references: [id])
   Products ProductsOnSales[]
+
+  // Index for filtering by company (used in all sales queries)
+  @@index([company_id])
+  // Composite index for company + createdAt (used in date filtering and sorting)
+  @@index([company_id, createdAt])
+  // Index for filtering by client (used in joins)
+  @@index([clientId])
+  // Index for filtering by payment status
+  @@index([paid])
+  // Index for payment time range queries
+  @@index([paymentTime])
+  // Composite index for company + paid status (common filter combination)
+  @@index([company_id, paid])
 }
 
 model ProductsOnSales {
@@ -76,6 +98,13 @@ model ProductsOnSales {
 
   Product Product @relation(fields: [product_id], references: [id])
   Sale    Sale    @relation(fields: [sale_id], references: [id])
+
+  // Index for looking up products in a sale (used in sale details)
+  @@index([sale_id])
+  // Index for looking up sales of a product (used in product history)
+  @@index([product_id])
+  // Composite index for fast join queries
+  @@index([sale_id, product_id])
 
   @@map("productsOnSales")
 }
@@ -93,6 +122,13 @@ model Employee {
 
   Company Company @relation(fields: [companyId], references: [id])
   Role    Role    @relation(fields: [roleId], references: [id])
+
+  // Index for filtering by company (used in employee queries)
+  @@index([companyId])
+  // Composite index for company + active status (common filter)
+  @@index([companyId, active])
+  // Index for role lookups
+  @@index([roleId])
 }
 
 model Permission {
@@ -140,6 +176,13 @@ model Client {
 
   Company Company @relation(fields: [companyId], references: [id])
   Sales   Sale[]
+
+  // Index for filtering by company (used in all client queries)
+  @@index([companyId])
+  // Composite index for company + createdAt (used in sorting)
+  @@index([companyId, createdAt])
+  // Index for name search
+  @@index([name])
 }
 
 model Notification {
@@ -152,4 +195,11 @@ model Notification {
   createdAt   DateTime @default(now())
 
   Company Company @relation(fields: [companyId], references: [id])
+
+  // Index for filtering by company (used in notification queries)
+  @@index([companyId])
+  // Composite index for unread notifications (common query pattern)
+  @@index([companyId, readed])
+  // Composite index for sorting by creation date
+  @@index([companyId, createdAt])
 }

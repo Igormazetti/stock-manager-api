@@ -13,7 +13,14 @@ import roleRouter from './modules/roles/routes/RoleRoutes';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://www.zenstock.com.br', 'https://zenstock.com.br'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Length', 'X-Request-Id'],
+  credentials: true,
+  maxAge: 86400
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
