@@ -1,4 +1,3 @@
-import { CustomError } from 'common/error/CustomError';
 import { NextFunction, Request, Response } from 'express';
 import { prisma } from '../database/prismaClient';
 import Token from '../utils/jwt';
@@ -58,7 +57,7 @@ export const authMiddleware = async (
     const authorizationHeader = req.headers.authorization;
 
     if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
-      throw new CustomError('Invalid token format', 401);
+      return _res.status(401).json({ error: 'Invalid token format' });
     }
 
     const token = authorizationHeader.split(' ')[1];
@@ -109,11 +108,8 @@ export const authMiddleware = async (
       return next();
     }
 
-    throw new CustomError('Invalid token', 401);
+    return _res.status(401).json({ error: 'Invalid token' });
   } catch (error) {
-    if (error instanceof CustomError) {
-      throw error;
-    }
-    throw new CustomError('Authentication failed', 401);
+    return _res.status(401).json({ error: 'Authentication failed' });
   }
 };
