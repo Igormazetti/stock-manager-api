@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { object, string } from 'yup';
-import LoginCompanyService from '../services/LoginCompany.service';
-import LoginEmployeeService from '../services/LoginEmployee.service';
+import LoginService from '../services/Login.service';
 
 const LoginSchema = object({
   email: string().email().required(),
@@ -10,19 +9,10 @@ const LoginSchema = object({
 });
 
 export default class AuthController {
-  public async loginCompany(request: Request, response: Response) {
+  public async login(request: Request, response: Response) {
     const { email, password } = await LoginSchema.validate(request.body);
 
-    const loginService = container.resolve(LoginCompanyService);
-    const result = await loginService.execute({ email, password });
-
-    return response.status(result.status).json(result);
-  }
-
-  public async loginEmployee(request: Request, response: Response) {
-    const { email, password } = await LoginSchema.validate(request.body);
-
-    const loginService = container.resolve(LoginEmployeeService);
+    const loginService = container.resolve(LoginService);
     const result = await loginService.execute({ email, password });
 
     return response.status(result.status).json(result);
