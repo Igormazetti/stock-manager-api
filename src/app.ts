@@ -14,18 +14,14 @@ import roleRouter from './modules/roles/routes/RoleRoutes';
 const app = express();
 
 const corsOptions = {
-  origin: '*',
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Cache-Control', 'Pragma'],
-  exposedHeaders: ['Content-Length', 'X-Request-Id'],
-  maxAge: 86400,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
 
-// Handle preflight requests explicitly
 app.options('*', cors(corsOptions));
 
 app.use(express.json({ limit: '50mb' }));
