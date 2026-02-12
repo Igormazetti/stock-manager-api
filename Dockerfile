@@ -1,17 +1,14 @@
 # Build stage
 FROM node:20-alpine AS builder
 
-# Install build dependencies for native modules (bcrypt)
-RUN apk add --no-cache python3 make g++
-
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies with reduced concurrency to save memory
-RUN npm install --maxsockets=2
+# Install dependencies (npm ci is faster and more reliable)
+RUN npm ci
 
 # Generate Prisma Client
 RUN npx prisma generate
